@@ -6,13 +6,23 @@ on:
       - main
 
 jobs:
-
   quality:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Define a versão do Node.js (ajuste se necessário)
+          cache: 'npm'       # Ativa o cache para acelerar a instalação das dependências
+
+      - name: Instalar dependências
+        run: npm ci          # Instala as dependências de forma limpa e rápida baseada no package-lock.json
+
+      - name: Executar testes (Jest)
+        run: npm test        # Executa o comando de teste definido no seu package.json
 
       - name: Verificar index.html
         run: |
@@ -27,7 +37,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs: quality
-
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
